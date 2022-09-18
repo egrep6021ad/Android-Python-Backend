@@ -4,6 +4,7 @@ from threading import Thread
 import sqlite3
 import sys
 import os
+import cryptocode
 
 # Init. flask
 app = Flask('')
@@ -19,24 +20,26 @@ def get_db_connection():
     return conn
 
 # Module to encrypt Venmo ID's and Passwords:
-
-# Mobile Endpoint: 
-
-# Query All Current Listings:
-
+def encrypt(arg):
+  _1_ = os.environ['horcrux_1']
+  encoded = cryptocode.encrypt(arg,_1_)
+  return encoded
+  
 # CREATE listing API Enpoint:
 @app.route('/create/', methods=('GET', 'POST'), strict_slashes=False)
 def sell_reservation():
+  # Parse JSON data:
   data = request.get_json()
-  username = data['username']
-  email = data['email']
-  venmo = data['venmo_id']
-  venmo_pass = data['venmo_pass']
+  username = encrypt(data['username'])
+  email = encrypt(data['email'])
+  venmo = encrypt(data['venmo_id'])
+  venmo_pass = encrypt(data['venmo_pass'])
   restaurant = data['restaurant']
   time_of_reservation = data['time_of_reservation']
   number_of_people = data['number_of_people']
-  
+  # Clean data:
 
+  # Insert into Database:
   conn = get_db_connection()
   conn.execute("INSERT INTO clients (username, email, venmo, venmo_pass, restaurant, time_of_reservation, number_of_people) VALUES(?,?,?,?,?,?,?)", (username, email, venmo, venmo_pass, restaurant, time_of_reservation, number_of_people))
   conn.commit()
@@ -64,7 +67,7 @@ def get_reservations():
   return jsonify(json)
 
 
-# WEB Endpoint
+# WEB Endpoint (Admin Console)
 @app.route('/')
 def index():
     conn = get_db_connection()

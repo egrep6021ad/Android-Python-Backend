@@ -4,9 +4,9 @@
     <h3 style="text-decoration: underline;">Reservations open for bidding:</h3>
     {% for client in clients %}
         <div >
-          <p><b>Username:</b> {{ client['username'] }}</p>
-          <p><b>Email:</b> {{ client['email'] }}</p>
-          <p><b>Venmo ID:</b>  {{ client['venmo'] }}</p>
+          <p><b>Username (Encrypted):</b> {{ client['username'] }}</p>
+          <p><b>Email (Encrypted):</b> {{ client['email'] }}</p>
+          <p><b>Venmo ID (Encrypted):</b>  {{ client['venmo'] }}</p>
           <p><b>Venmo Password (Encrypted):</b>  {{ client['venmo_pass'] }}</p>
           <p><b>Restaurant details:</b>  {{ client['restaurant'] }}</p>
           <p><b>Time of reservation:</b>  {{ client['time_of_reservation'] }}</p>
