@@ -2,15 +2,15 @@
 
 {% block content %}
     <h3 style="text-decoration: underline;">Reservations open for bidding:</h3>
-    {% for client in clients %}
+    {% for restaurant in restaurants %}
         <div >
-          <p><b>Username (Encrypted):</b> {{ client['username'] }}</p>
-          <p><b>Email (Encrypted):</b> {{ client['email'] }}</p>
-          <p><b>Venmo ID (Encrypted):</b>  {{ client['venmo'] }}</p>
-          <p><b>Venmo Password (Encrypted):</b>  {{ client['venmo_pass'] }}</p>
-          <p><b>Restaurant details:</b>  {{ client['restaurant'] }}</p>
-          <p><b>Time of reservation:</b>  {{ client['time_of_reservation'] }}</p>
-          <p><b>Number of people:</b>  {{ client['number_of_people'] }}</p>
+          <p><b>Restaurant: </b> {{ restaurant['restaurant'] }}</p>
+          <p><b>Time: </b> {{ restaurant['reservation_time'] }}</p>
+          <p><b>Headcount: </b>  {{ restaurant['headcount'] }}</p>
+          <p><b>Adress: </b>  {{ restaurant['adress'] }}</p>
+          <p><b>Price: </b>  {{ restaurant['price'] }}</p>
+          <p><b>Venmo ID: </b>  {{ restaurant['venmo_id'] }}</p>
+
         </div>
 <hr/>
     {% endfor %}

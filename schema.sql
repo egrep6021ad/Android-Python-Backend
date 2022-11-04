@@ -1,14 +1,11 @@
-DROP TABLE IF EXISTS clients;
+DROP TABLE IF EXISTS restaurants;
 
-CREATE TABLE clients (
+CREATE TABLE restaurants (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT,
-    email TEXT, 
-    venmo TEXT,
-    venmo_pass TEXT,
     restaurant TEXT,
-    time_of_reservation TEXT,
-    number_of_people TEXT
-    
-  
+    reservation_time TEXT, 
+    headcount TEXT,
+    adress TEXT,
+    price TEXT,
+    venmo_id TEXT
 );

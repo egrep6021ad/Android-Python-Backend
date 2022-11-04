@@ -19,61 +19,66 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# Module to encrypt Venmo ID's and Passwords:
+
+# Module to encrypt:
 def encrypt(arg):
-  _1_ = os.environ['horcrux_1']
-  encoded = cryptocode.encrypt(arg,_1_)
-  return encoded
-  
+    _1_ = os.environ['horcrux_1']
+    encoded = cryptocode.encrypt(arg, _1_)
+    return encoded
+
+
 # CREATE listing API Enpoint:
 @app.route('/create/', methods=('GET', 'POST'), strict_slashes=False)
 def sell_reservation():
-  # Parse JSON data:
-  data = request.get_json()
-  username = encrypt(data['username'])
-  email = encrypt(data['email'])
-  venmo = encrypt(data['venmo_id'])
-  venmo_pass = encrypt(data['venmo_pass'])
-  restaurant = data['restaurant']
-  time_of_reservation = data['time_of_reservation']
-  number_of_people = data['number_of_people']
-  # Clean data:
+    # Parse JSON data:
+    data = request.get_json()
+    restaurant = data['restaurant']
+    time = data['time']
+    headcount = data['headcount']
+    adress = data['adress']
+    price = data['price']
+    venmo_id = data['venmo_id']
+    # Clean data:
+    print(data)
+  
+    # Insert into Database:
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT INTO restaurants (restaurant, reservation_time, headcount, adress, price, venmo_id) VALUES(?,?,?,?,?,?)",
+        (restaurant, time, headcount, adress, price, venmo_id))
+    conn.commit()
+    conn.close()
 
-  # Insert into Database:
-  conn = get_db_connection()
-  conn.execute("INSERT INTO clients (username, email, venmo, venmo_pass, restaurant, time_of_reservation, number_of_people) VALUES(?,?,?,?,?,?,?)", (username, email, venmo, venmo_pass, restaurant, time_of_reservation, number_of_people))
-  conn.commit()
-  conn.close()
-  return "[SUCESS] POST"
+    return "[SUCESS] POST"
 
 
 # GET listing's API Enpoint:
 @app.route('/fetch/', methods=['GET'], strict_slashes=False)
 def get_reservations():
-  conn = get_db_connection()
-  # Get all current reservations from DB:
-  reservations = conn.execute("SELECT * FROM clients").fetchall()
-  conn.close()
-  # Build array of objects:
-  json = []
-  for res in reservations:
-    temp = {
-      "username" : res['username'] ,
-      "email" : res['email'] ,
-      "venmo" : res['venmo']
-    }
-    json.append(temp)
-  # Return JSON  
-  return jsonify(json)
+    conn = get_db_connection()
+    # Get all current reservations from DB:
+    reservations = conn.execute("SELECT * FROM clients").fetchall()
+    conn.close()
+    # Build array of objects:
+    json = []
+    for res in reservations:
+        temp = {
+            "username": res['username'],
+            "email": res['email'],
+            "venmo": res['venmo']
+        }
+        json.append(temp)
+    # Return JSON
+    return jsonify(json)
 
 
 # WEB Endpoint (Admin Console)
 @app.route('/')
 def index():
     conn = get_db_connection()
-    clients = conn.execute('SELECT * FROM clients').fetchall()
+    restaurants = conn.execute('SELECT * FROM restaurants').fetchall()
     conn.close()
-    return render_template('admin_access.html', clients=clients)
+    return render_template('admin_access.html', restaurants=restaurants)
 
 
 app.run(host='0.0.0.0', port=81)
